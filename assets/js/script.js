@@ -280,10 +280,7 @@ const submitScore = name => {
         initials: name,
         score: timeLeft
     }
-
-    // ==================
-    // FIX PLACEMENT ALGO
-    // ==================
+    
     if (scoreData) { // If there already was data stored, sort
         console.log("Data found!");
         console.log(`Unplaced arr: ${scoreData}`);
