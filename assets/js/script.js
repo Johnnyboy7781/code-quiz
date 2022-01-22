@@ -1,5 +1,7 @@
-let startButton = document.querySelector("#start-button");
-let main = document.querySelector("#main");
+let startButtonEl = document.querySelector("#start-button");
+let mainEl = document.querySelector("#main");
+let timerEl = document.querySelector("#timer");
+let timeLeft = 0;
 let questionIndex = 0;
 
 const questions = [
@@ -51,8 +53,27 @@ const questions = [
 
 ];
 
+const updateTimerEl = () => {
+    timeLeft--;
+    timerEl.innerHTML = timeLeft;
+    if (timeLeft === 0) {
+        clearInterval(1);
+    }
+}
+
+const startTimer = () => {
+    timeLeft = 5;
+    timerEl.innerHTML = timeLeft
+    setInterval(updateTimerEl, 1000)
+}
+
 // Changes question
 const changeQuestion = () => {
+    if (!questions[questionIndex]) {
+        console.log("Finised quuiz!!!!");
+        return;
+    }
+
     let questionObj = questions[questionIndex];
     let questionEl = document.querySelector(".question");
     
@@ -60,11 +81,10 @@ const changeQuestion = () => {
 
     for (let i = 0; i < 4; i++) {
         let buttonEl = document.querySelector("button[data-id='" + (i + 1) + "']");
-
-        console.log(buttonEl);
+        buttonEl.setAttribute("data-answer", "false");
 
         if (questionObj.answers[i][0] === "_") {
-            buttonEl.setAttribute("answer", "true");
+            buttonEl.setAttribute("data-answer", "true");
             let answer = questionObj.answers[i].substring(1);
             buttonEl.innerHTML = `${i + 1}. ${answer}`
         } else {
@@ -78,7 +98,9 @@ const changeQuestion = () => {
 // Start game populate w/ elements
 const populateQuestion = () => {
     // Clear everything in main
-    main.innerHTML = "";
+    mainEl.innerHTML = "";
+
+    startTimer();
 
     // Create the question elements
     let questionWrapperEl = document.createElement("div");
@@ -92,8 +114,9 @@ const populateQuestion = () => {
     answersEl.className = "answers";
     for (let i = 0; i < 4; i++) {
         let button = document.createElement("button");
+        button.id = "answer";
         button.setAttribute("data-id", `${i + 1}`);
-        button.setAttribute("answer", "false");
+        button.setAttribute("data-answer", "false");
         button.innerHTML = `${i + 1}. `;
         answersEl.appendChild(button);
     }
@@ -101,17 +124,49 @@ const populateQuestion = () => {
 
     let resultEl = document.createElement("div");
     resultEl.className = "result";
-    resultEl.innerHTML = "<em id='result'>Correct!</em>";
+    resultEl.innerHTML = "";
     resultEl.style.display = "none";
     questionWrapperEl.appendChild(resultEl);
 
     // Append entire wrapper to main
-    main.appendChild(questionWrapperEl);
+    mainEl.appendChild(questionWrapperEl);
 
     // Add question data to the elements
     changeQuestion();
 }
 
-startButton.addEventListener("click", function() {
-    populateQuestion();
-})
+// Displays result el for 3 seconds
+let displayResult = result => {
+    clearTimeout(1);
+
+    let resultEl = document.querySelector(".result");
+    resultEl.style.display = "block";
+    resultEl.innerHTML = "<em>" + result + "</em>"
+
+    setTimeout(hideResult, 2500);
+}
+
+let hideResult = event => {
+    let resultEl = document.querySelector(".result");
+    resultEl.style.display = "none";
+}
+
+// Checks if answer is correct
+let checkAnswer = event => {
+    let targetAnswer = event.target;
+    // Exit funtion if not an answer button
+    if (targetAnswer.id !== "answer") {
+        return;
+    }
+
+    if (targetAnswer.getAttribute("data-answer") === "true") {
+        displayResult("Correct!");
+        changeQuestion();
+    } else if (targetAnswer.getAttribute("data-answer") === "false") {
+        displayResult("Wrong!");
+        changeQuestion();
+    }
+}
+
+startButtonEl.addEventListener("click", populateQuestion);
+mainEl.addEventListener("click", checkAnswer);
