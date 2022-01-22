@@ -3,6 +3,7 @@ let mainEl = document.querySelector("#main");
 let timerEl = document.querySelector("#timer");
 let timeLeft = 0;
 let questionIndex = 0;
+let finalScore = 0;
 
 const questions = [
     {
@@ -62,9 +63,9 @@ const updateTimerEl = () => {
 }
 
 const startTimer = () => {
-    timeLeft = 5;
+    timeLeft = 100;
     timerEl.innerHTML = timeLeft
-    setInterval(updateTimerEl, 1000)
+    setInterval(updateTimerEl, 1000);
 }
 
 // Changes question
@@ -135,20 +136,18 @@ const populateQuestion = () => {
     changeQuestion();
 }
 
+let hideResult = () => {
+    let resultEl = document.querySelector(".result");
+    resultEl.style.display = "none";
+}
+
 // Displays result el for 3 seconds
 let displayResult = result => {
-    clearTimeout(1);
-
     let resultEl = document.querySelector(".result");
     resultEl.style.display = "block";
     resultEl.innerHTML = "<em>" + result + "</em>"
 
-    setTimeout(hideResult, 2500);
-}
-
-let hideResult = event => {
-    let resultEl = document.querySelector(".result");
-    resultEl.style.display = "none";
+    setTimeout(hideResult, 1000);
 }
 
 // Checks if answer is correct
@@ -164,6 +163,8 @@ let checkAnswer = event => {
         changeQuestion();
     } else if (targetAnswer.getAttribute("data-answer") === "false") {
         displayResult("Wrong!");
+        timeLeft = Math.max(0, timeLeft - 10);
+        timerEl.innerHTML = timeLeft;
         changeQuestion();
     }
 }
