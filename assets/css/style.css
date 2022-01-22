@@ -126,6 +126,10 @@ main {
     color: white;
 }
 
+.submit:hover {
+    background-color: #9f4bc7;
+}
+
 /* High scores screen styles */
 .high-scores-wrapper {
     width: 40%;

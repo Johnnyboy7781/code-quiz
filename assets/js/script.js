@@ -67,7 +67,7 @@ const updateTimerEl = () => {
 }
 
 const startTimer = () => {
-    timeLeft = 10;
+    timeLeft = 75;
     timerEl.innerHTML = timeLeft
     setInterval(updateTimerEl, 1000);
 }
@@ -313,6 +313,7 @@ const buttonHandler = event => {
             break;
         }
     } else if (targetAnswer.id === "view-scores") {
+        clearInterval(1);
         populateScoreTable();
     } else if (targetAnswer.id === "back-button") {
         location.reload();
