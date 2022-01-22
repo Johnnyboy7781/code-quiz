@@ -68,10 +68,62 @@ const startTimer = () => {
     setInterval(updateTimerEl, 1000);
 }
 
+const populateFinishQuiz = () => {
+    let resultEl = document.querySelector(".result");
+    
+    // Clear everything in main
+    mainEl.innerHTML = "";
+
+    let finWrapperEl = document.createElement("div");
+    finWrapperEl.className = "fin-wrapper";
+
+    let finTitleEl = document.createElement("div");
+    finTitleEl.className = "fin-title title";
+    finTitleEl.innerHTML = "All done!";
+    finWrapperEl.appendChild(finTitleEl);
+
+    let finScoreEl = document.createElement("div");
+    finScoreEl.className = "fin-score";
+    finScoreEl.innerHTML = `Your final score is ${timeLeft}.`;
+    finWrapperEl.appendChild(finScoreEl);
+
+    // Beginning form creation
+    let formWrapperEl = document.createElement("div");
+    let formEl = document.createElement("div");
+    formEl.className = "form";
+
+    let labelEl = document.createElement("label");
+    labelEl.setAttribute("for", "initials");
+    labelEl.innerHTML = "Enter initials:";
+    formEl.appendChild(labelEl);
+
+    let inputEl = document.createElement("input");
+    inputEl.className = "form-input";
+    inputEl.id = "initials";
+    inputEl.setAttribute("type", "text");
+    inputEl.setAttribute("placeholder", "Your initials");
+    inputEl.setAttribute("name", "initials");
+    formEl.appendChild(inputEl);
+
+    let buttonEl = document.createElement("button");
+    buttonEl.className = "submit";
+    buttonEl.id = "submit"
+    buttonEl.innerHTML = "submit";
+    formEl.appendChild(buttonEl);
+
+    formWrapperEl.appendChild(formEl);
+    finWrapperEl.appendChild(formWrapperEl);
+    // End form creation
+    finWrapperEl.appendChild(resultEl);
+
+    mainEl.appendChild(finWrapperEl);
+}
+
 // Changes question
 const changeQuestion = () => {
     if (!questions[questionIndex]) {
-        console.log("Finised quuiz!!!!");
+        clearInterval(1);
+        populateFinishQuiz();
         return;
     }
 
@@ -151,13 +203,7 @@ let displayResult = result => {
 }
 
 // Checks if answer is correct
-let checkAnswer = event => {
-    let targetAnswer = event.target;
-    // Exit funtion if not an answer button
-    if (targetAnswer.id !== "answer") {
-        return;
-    }
-
+let checkAnswer = targetAnswer => {
     if (targetAnswer.getAttribute("data-answer") === "true") {
         displayResult("Correct!");
         changeQuestion();
@@ -169,5 +215,59 @@ let checkAnswer = event => {
     }
 }
 
+const submitScore = name => {
+    // Pull existing data
+    let scoreDataUnparsed = localStorage.getItem("scores");
+    let scoreData = null;
+    if (scoreDataUnparsed) {
+        scoreData = JSON.parse(scoreDataUnparsed);
+    }
+
+    // Create data arr
+    let scoreDataArr = [];
+    
+    // Make obj for current session
+    let scoreObj = {
+        initials: name,
+        score: timeLeft
+    }
+
+    if (scoreData) { // If there already was data stored, sort
+        let placed = false;
+        for (let i = 0; i < scoreData.length; i++) {
+            if ((i + 1) === scoreData.length && !placed) {
+                scoreDataArr.push(scoreData[i]);
+                scoreDataArr.push(scoreObj);
+            } else if (scoreData[i].score > scoreObj.score || placed) {
+                scoreDataArr.push(scoreData[i]);
+            } else if (scoreData[i].score <= scoreObj.score && !placed) {
+                scoreDataArr.push(scoreObj);
+                scoreDataArr.push(scoreData[i]);
+                placed = true;
+            }
+        }
+        console.log(scoreDataArr);
+    } else { // If there was no data stored
+        scoreDataArr.push(scoreObj);
+    }
+    
+    localStorage.setItem("scores", JSON.stringify(scoreDataArr));
+}
+
+const buttonHandler = event => {
+    
+    const targetAnswer = event.target;
+    if (targetAnswer.id === "answer") {
+        checkAnswer(targetAnswer);
+    } else if (targetAnswer.id === "submit") {
+        let name = document.querySelector(".form-input").value;
+        while (name) {
+            submitScore(name);
+            break;
+        }
+    }
+
+}
+
 startButtonEl.addEventListener("click", populateQuestion);
-mainEl.addEventListener("click", checkAnswer);
+mainEl.addEventListener("click", buttonHandler);

@@ -94,3 +94,63 @@ main {
     border-top: 3px solid rgb(151, 151, 151);
     color: rgb(151, 151, 151);
 }
+
+/* Final score screen styles */
+.fin-title {
+    font-size: 2vw;
+    font-weight: bold;
+}
+
+.fin-score {
+    font-size: 1.5vw;
+    padding: 10px 0;
+}
+
+.form {
+    font-size: 1.5vw;
+    display: flex;
+    align-items: center;
+}
+
+.form > * {
+    margin: 0 5px;
+}
+
+.form-input {
+    height: 1.5vw;
+    top: -5px;
+}
+
+.submit {
+    padding: 0.24vw 0.48vw;
+    font-size: 0.8vw;
+    border-radius: 10px;
+    background-color: #351c75;
+    color: white;
+}
+
+/* High scores screen styles */
+.high-scores-wrapper {
+    width: 40%;
+    padding-top: 40px;
+}
+
+.high-scores-wrapper > * {
+    padding: 10px 0;
+}
+
+.high-scores div:nth-child(odd) {
+    background-color: #d9d3e9;
+}
+
+.high-buttons button {
+    font-size: 1.5vw;
+    padding: 5px 10px;
+    background-color: #351c75;
+    color: white;
+    border-radius: 10px;
+}
+
+.high-buttons button:hover {
+    background-color: #9f4bc7;
+}
