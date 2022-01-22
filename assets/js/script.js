@@ -58,13 +58,16 @@ const questions = [
 const updateTimerEl = () => {
     timeLeft--;
     timerEl.innerHTML = timeLeft;
-    if (timeLeft === 0) {
+    if (timeLeft <= 0) {
+        timeLeft = 0;
+        timerEl.innerHTML = timeLeft;
         clearInterval(1);
+        populateFinishQuiz();
     }
 }
 
 const startTimer = () => {
-    timeLeft = 100;
+    timeLeft = 10;
     timerEl.innerHTML = timeLeft
     setInterval(updateTimerEl, 1000);
 }
