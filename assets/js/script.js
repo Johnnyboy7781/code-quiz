@@ -257,6 +257,13 @@ const populateScoreTable = () => {
     buttonWrapperEl.appendChild(clearButtonEl);
     scoreWrapperEl.appendChild(buttonWrapperEl);
 
+    // Modify header to make elements dissapear
+    let viewScoresButtonEl = document.querySelector(".high-score-link");
+    viewScoresButtonEl.style.display = "none";
+
+    let fullTimerEl = document.querySelector(".timer");
+    fullTimerEl.style.display = "none";
+
     mainEl.appendChild(scoreWrapperEl);
 }
 
@@ -268,35 +275,33 @@ const submitScore = name => {
         scoreData = JSON.parse(scoreDataUnparsed);
     }
 
-    // Create data arr
-    let scoreDataArr = [];
-    
     // Make obj for current session
     let scoreObj = {
         initials: name,
         score: timeLeft
     }
 
+    // ==================
+    // FIX PLACEMENT ALGO
+    // ==================
     if (scoreData) { // If there already was data stored, sort
-        let placed = false;
+        console.log("Data found!");
+        console.log(`Unplaced arr: ${scoreData}`);
         for (let i = 0; i < scoreData.length; i++) {
-            if ((i + 1) === scoreData.length && !placed) {
-                scoreDataArr.push(scoreData[i]);
-                scoreDataArr.push(scoreObj);
-            } else if (scoreData[i].score > scoreObj.score || placed) {
-                scoreDataArr.push(scoreData[i]);
-            } else if (scoreData[i].score <= scoreObj.score && !placed) {
-                scoreDataArr.push(scoreObj);
-                scoreDataArr.push(scoreData[i]);
-                placed = true;
+            if (scoreData[i].score < scoreObj.score) {
+                scoreData.splice(i, 0, scoreObj);
+                break;
+            } else if (!scoreData[i + 1]) {
+                scoreData.push(scoreObj);
+                break;
             }
         }
-        console.log(scoreDataArr);
+        console.log(`Finished arr: ${scoreData}`);
     } else { // If there was no data stored
-        scoreDataArr.push(scoreObj);
+        scoreData = [scoreObj];
     }
     
-    localStorage.setItem("scores", JSON.stringify(scoreDataArr));
+    localStorage.setItem("scores", JSON.stringify(scoreData));
 
     populateScoreTable();
 }

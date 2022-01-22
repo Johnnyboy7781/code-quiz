@@ -157,6 +157,10 @@ main {
     background-color: #9f4bc7;
 }
 
+.fin-score {
+    padding-left: 10px;
+}
+
 @media screen and (max-width: 950px) {
     header div {
         font-size: 3vw;
