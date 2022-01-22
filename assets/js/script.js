@@ -1,5 +1,6 @@
 let startButtonEl = document.querySelector("#start-button");
 let mainEl = document.querySelector("#main");
+let headerEl = document.querySelector("#header");
 let timerEl = document.querySelector("#timer");
 let timeLeft = 0;
 let questionIndex = 0;
@@ -215,6 +216,47 @@ let checkAnswer = targetAnswer => {
     }
 }
 
+const populateScoreTable = () => {
+    let scoreData = JSON.parse(localStorage.getItem("scores"));
+
+    // Clear main
+    mainEl.innerHTML = "";
+
+    let scoreWrapperEl = document.createElement("div");
+    scoreWrapperEl.className = "high-scores-wrapper";
+    
+    let titleEl = document.createElement("div");
+    titleEl.className = "fin-title title";
+    titleEl.innerHTML = "High scores";
+    scoreWrapperEl.appendChild(titleEl);
+
+    let highScoreEl = document.createElement("div");
+    highScoreEl.className = "high-scores";
+    if (scoreData) {
+        for (let i = 0; i < scoreData.length; i++) {
+            let scoreEl = document.createElement("div");
+            scoreEl.className = "fin-score";
+            scoreEl.innerHTML = `${i + 1}. ${scoreData[i].initials} ${scoreData[i].score}`;
+            highScoreEl.appendChild(scoreEl);
+        }
+    };
+    scoreWrapperEl.appendChild(highScoreEl);
+
+    let buttonWrapperEl = document.createElement("div");
+    buttonWrapperEl.className = "high-buttons";
+    let backButtonEl = document.createElement("button");
+    backButtonEl.innerHTML = "Go back";
+    backButtonEl.id = "back-button";
+    buttonWrapperEl.appendChild(backButtonEl);
+    let clearButtonEl = document.createElement("button");
+    clearButtonEl.innerHTML = "Clear high scores";
+    clearButtonEl.id = "clear-button";
+    buttonWrapperEl.appendChild(clearButtonEl);
+    scoreWrapperEl.appendChild(buttonWrapperEl);
+
+    mainEl.appendChild(scoreWrapperEl);
+}
+
 const submitScore = name => {
     // Pull existing data
     let scoreDataUnparsed = localStorage.getItem("scores");
@@ -252,6 +294,8 @@ const submitScore = name => {
     }
     
     localStorage.setItem("scores", JSON.stringify(scoreDataArr));
+
+    populateScoreTable();
 }
 
 const buttonHandler = event => {
@@ -265,9 +309,16 @@ const buttonHandler = event => {
             submitScore(name);
             break;
         }
+    } else if (targetAnswer.id === "view-scores") {
+        populateScoreTable();
+    } else if (targetAnswer.id === "back-button") {
+        location.reload();
+    } else if (targetAnswer.id === "clear-button") {
+        localStorage.clear();
+        populateScoreTable();
     }
-
 }
 
 startButtonEl.addEventListener("click", populateQuestion);
 mainEl.addEventListener("click", buttonHandler);
+headerEl.addEventListener("click", buttonHandler);

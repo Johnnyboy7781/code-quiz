@@ -44,8 +44,6 @@ main {
 .start-button button {
     background-color: #351c75;
     color: white;
-    aspect-ratio: 6/2;
-    width: 175px;
     border-radius: 10px;
     font-size: 1.4vw;
     padding: 10px;
@@ -74,13 +72,12 @@ main {
 .answers button {
     background-color: #351c75;
     color: white;
-    width: 35%;
+    width: 30%;
     margin: 7px 0;
-    height: 75px;
     border-radius: 10px;
     font-size: 1.4vw;
     text-align: left;
-    padding: 20px;
+    padding: 5px;
 }
 
 .answers button:hover {
@@ -146,6 +143,7 @@ main {
 .high-buttons button {
     font-size: 1.5vw;
     padding: 5px 10px;
+    margin: 5px 15px 0 15px;
     background-color: #351c75;
     color: white;
     border-radius: 10px;
@@ -153,4 +151,74 @@ main {
 
 .high-buttons button:hover {
     background-color: #9f4bc7;
+}
+
+@media screen and (max-width: 950px) {
+    header div {
+        font-size: 3vw;
+    }
+
+    .title {
+        font-size: 3.5vw;
+    }
+    
+    .about {
+        font-size: 3vw;
+    }
+    
+    .start-button button {
+        font-size: 3vw;
+    }
+
+    .question-wrapper {
+        width: 80%;
+    }
+    
+    .question {
+        font-size: 4.3vw;
+    }
+    
+    .answers button {
+        font-size: 3vw;
+        width: 30%;
+    }
+    
+    .result {
+        font-size: 3vw;
+    }
+
+    .fin-wrapper {
+        width: fit-content;
+    }
+
+    .fin-title {
+        font-size: 10vw;
+    }
+    
+    .fin-score {
+        font-size: 5vw;
+    }
+    
+    .form {
+        font-size: 5vw;
+    }
+    
+    .form-input {
+        height: 5vw;
+        width: 40vw;
+        font-size: 5vw;
+    }
+    
+    .submit {
+        font-size: 5vw;
+    }
+
+    .high-scores-wrapper {
+        width: 70%;
+    }
+    
+    .high-buttons button {
+        font-size: 4.5vw;
+        padding: 5px 10px;
+    }
 }
